@@ -1,0 +1,6 @@
+- [Home](https://github.com/rjbourne/symphysics/wiki)
+- [SystemL](https://github.com/rjbourne/symphysics/wiki/SystemL)
+- [Animate](https://github.com/rjbourne/symphysics/wiki/Animate)
+- [Examples](https://github.com/rjbourne/symphysics/wiki/Examples)
+  - [Basic Pendulum](https://github.com/rjbourne/symphysics/wiki/Basic-Pendulum)
+  - [Animated Pendulum](https://github.com/rjbourne/symphysics/wiki/Animated-Pendulum)
