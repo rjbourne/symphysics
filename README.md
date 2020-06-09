@@ -15,4 +15,4 @@ pip install symphysics
 The symphysics library contains the following tools
 
  - [SystemL](https://github.com/rjbourne/symphysics/wiki/SystemL)
- - Animate
+ - [Animate](https://github.com/rjbourne/symphysics/wiki/Animate)
