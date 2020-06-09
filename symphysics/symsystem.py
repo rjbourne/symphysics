@@ -205,13 +205,13 @@ class SystemL():
         return expressions
     
     @staticmethod
-    def saveSystem(sys, filename, functions=True, lambdas=True, datas=True): # saves system
+    def saveSystem(sys, filename, functions=False, lambdas=True, datas=True): # saves system
         stores = {} # dictionary stores data
         stores["version"] = 1 # version number of lag file - to ensure program backwards compatible
         if functions: # if stroing functions
             funcColl = [sys.coords, sys.coords1, sys.motion, sys.motion1, sys.constraints, [sys.L]]
             funcColl = [copy.copy(j) for j in funcColl] # make copy so as not to disturb original system
-            funcColl, convs = SystemL.convertFunctions(funcColl) # convert functions to symbols
+            funcColl, convs = SystemL._convertFunctions(funcColl) # convert functions to symbols
             stores["functions"] = funcColl # store functions
             stores["fileConversions"] = convs # store data to reconstruct functions from symbols
         if lambdas and sys.motionApply != None: # if want to store lambda functions and they exist
@@ -219,20 +219,22 @@ class SystemL():
         if datas and isinstance(sys.data, np.ndarray): # if want to store data and it exists
             stores["data"] = sys.data
             stores["times"] = sys.times
-        base_path = pathlib.Path(__file__).parent # get main path of workspace
+        #base_path = pathlib.Path(__file__).parent # get main path of workspace
         filename += '.lag'
-        file_path = str((base_path / "../saved systems/"/filename).resolve())
-        outfile = open(file_path, 'wb')
+        #file_path = str((base_path / "../saved systems/"/filename).resolve())
+        #outfile = open(file_path, 'wb')
+        outfile = open(filename, 'wb')
         dill.settings["recurse"] = True
         dill.dump(stores, outfile) # dill the system store into a .lag file
         outfile.close()
     
     @staticmethod
     def loadSystem(filename):
-        base_path = pathlib.Path(__file__).parent # get main path of workspace
+        #base_path = pathlib.Path(__file__).parent # get main path of workspace
         filename += '.lag'
-        file_path = str((base_path / "../saved systems/"/filename).resolve())
-        infile = open(file_path, 'rb')
+        #file_path = str((base_path / "../saved systems/"/filename).resolve())
+        #infile = open(file_path, 'rb')
+        infile = open(filename, 'rb')
         dill.settings["recurse"] = True
         stores = dill.load(infile) # un-dill the system store
         infile.close()
@@ -240,7 +242,7 @@ class SystemL():
         if stores["version"] > 1: # check program can handle version number
             raise Exception("file version number exceeds maximum - please update your symlagrange")
         if "functions" in stores: # if the function is stored
-            funcs = SystemL.loadFunctions(stores["functions"], stores["fileConversions"]) # unconvert functions
+            funcs = SystemL._loadFunctions(stores["functions"], stores["fileConversions"]) # unconvert functions
             sys.coords = funcs[0] # load correct functions into system
             sys.coords1 = funcs[1]
             sys.motion = funcs[2]
@@ -256,7 +258,7 @@ class SystemL():
 
     
     @staticmethod
-    def convertFunctions(funcs): # currently only works if no functions which aren't coords
+    def _convertFunctions(funcs): # currently only works if no functions which aren't coords
         # in line below list of lists compressed into a list
         functions = _get_func_from_iter(functools.reduce(list.__add__, funcs)) # get a list of tuples of functions and their replacments and function and symbol arguments
         conversions = [[j[0], j[1]] for j in functions] # get function and replacement symbols
@@ -269,7 +271,7 @@ class SystemL():
         return funcs, fileConversions
     
     @staticmethod
-    def loadFunctions(funcs, fileConversions):
+    def _loadFunctions(funcs, fileConversions):
         conversions = [] # list function conversions from symbols
         while len(fileConversions) > 0: #while functions still to be converted from symbols
             loop_conversions = [] # stores conversions within this loop

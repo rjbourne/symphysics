@@ -196,7 +196,7 @@ class Animate():
         self.time = t # np.array of times
     
     def limits(self,x,y,z=False, row=1, column=1): # set axes limits
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         self.ax[row][column].set_xlim(x[0], x[1])
         self.ax[row][column].set_ylim(y[0], y[1])
         if z:
@@ -204,33 +204,33 @@ class Animate():
             self.ax[row][column].autoscale_view()
     
     def create_particle(self,a,conv, color = 'red', s=10, row=1, column=1): # create a particle and store
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         temp = Particle(a,conv, color, s, self.ax[row][column], self.dimension[row][column])
         self.particles.append(temp)
         return temp # return particle reference
     
     def create_rod(self,p1,p2, color='k', row=1, column=1): # create a rod and store
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         self.rods.append(Rod(p1,p2,color,self.ax[row][column], self.dimension[row][column]))
     
     def create_trace(self,p,length,color = None, row=1, column=1): # create a trace and store
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         if color == None: # if no color given set to particle color
             color = p.color
         self.traces.append(Trace(p,length,color,self.ax[row][column], self.dimension[row][column]))
     
     def create_spring(self,p1,p2,lamb,nat_l,color='red', row=1, column=1): # create a spring and store
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         self.springs.append(Spring(p1,p2,lamb,nat_l,color,self.ax[row][column],self.dimension[row][column]))
 
     def create_fade(self,p,length,color = None, row=1, column=1):
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         if color == None: # if no color given set to particle color
             color = p.color
         self.fades.append(Fade(p,length,color,self.ax[row][column], self.dimension[row][column]))
     
     def create_polygon(self,ps,color='red',alpha=0.5, row=1, column=1):
-        row, column = self.check_ax(row, column)
+        row, column = self._check_ax(row, column)
         self.polygons.append(Polygon(ps,color,alpha,self.ax[row][column],self.dimension[row][column]))
     
     def update(self,j): # update at time j
@@ -254,22 +254,24 @@ class Animate():
 
     def savegif(self, filename, fps): # save animation as a gif: requires pillow
         self.ani = FuncAnimation(self.fig,self.update,range(1,len(self.time)), interval=1000/fps, blit=False) # create animation
-        base_path = Path(__file__).parent # get main path of workspace
+        #base_path = Path(__file__).parent # get main path of workspace
         filename += '.gif'
-        file_path = (base_path / "../gifs/"/filename).resolve() # put filename in correct subdirectory
+        #file_path = (base_path / "../gifs/"/filename).resolve() # put filename in correct subdirectory
         writer = PillowWriter(fps=fps, bitrate=-1) 
-        self.ani.save(file_path, writer = writer) # save gif with pillow
+        #self.ani.save(file_path, writer = writer) # save gif with pillow
+        self.ani.save(filename, writer = writer)
     
     def savemp4(self, filename, fps, ffmpeg_loc='C:/FFmpeg/bin/ffmpeg', dpi=500): # save animation as mp4: requires ffmpeg
         plt.rcParams['animation.ffmpeg_path'] = ffmpeg_loc # locate ffmpeg on computer
         self.ani = FuncAnimation(self.fig,self.update,range(1,len(self.time)), interval=1000/fps, blit=False) # create animation
-        base_path = Path(__file__).parent # get main path of workspace
+        #base_path = Path(__file__).parent # get main path of workspace
         filename += '.mp4'
-        file_path = (base_path / "../mp4s/"/filename).resolve() # put filename in correct subdirectory
+        #file_path = str((base_path / "../mp4s/"/filename).resolve()) # put filename in correct subdirectory
         writer = FFMpegWriter(fps=fps, bitrate=5000)
-        self.ani.save(str(file_path), writer = writer, dpi=dpi) # write mp4 to file - high default dpi to get quality
+        #self.ani.save(file_path, writer = writer, dpi=dpi) # write mp4 to file - high default dpi to get quality
+        self.ani.save(filename, writer = writer, dpi=dpi)
 
-    def check_ax(self, row, column):
+    def _check_ax(self, row, column):
         if row < 1 or row > self.rows: # check if row/column allowed
             raise Exception("Row index out of range, should be 1 <= row <= " + str(self.rows) +", you gave row=" + str(row))
         if column < 1 or column > self.columns:
