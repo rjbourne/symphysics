@@ -23,18 +23,21 @@ initials = [1, 0]
 times = np.linspace(0,5,100) #20 fps for 5 seconds
 data = Pendulum.ODESolve(initials, times, consts)
 
-
+# functions from general coords to [x,y]
 def pivotConv(a):
     return [0,0]
 
 def bobConv(a):
     return [consts[1][1]*math.sin(a[0]), -consts[1][1]*math.cos(a[0])]
 
+#add animation objects
 animator = symphysics.Animate(data, times, d=2)
 animator.limits([-1.2, 1.2], [-1.2, 0.2])
 pivot = animator.create_particle(data[0], pivotConv, color="blue")
 bob = animator.create_particle(data[0], bobConv, color="red")
 animator.create_rod(pivot, bob)
 animator.create_fade(bob, 20)
+#find filepath
 filepath = str(pathlib.Path(__file__).parent.absolute()) + "\pendulum_animated_output"
+#save gif
 animator.savegif(filepath, fps=20)
