@@ -4,3 +4,4 @@
 - [Examples](https://github.com/rjbourne/symphysics/wiki/Examples)
   - [Basic Pendulum](https://github.com/rjbourne/symphysics/wiki/Basic-Pendulum)
   - [Animated Pendulum](https://github.com/rjbourne/symphysics/wiki/Animated-Pendulum)
+  - [Solar System](https://github.com/rjbourne/symphysics/wiki/Solar-System)

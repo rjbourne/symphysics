@@ -31,8 +31,9 @@ coords = []
 positions = []
 velocities = []
 L = 0
-for planet in planets:
+for planet in planets: # add each planet into lagrangian
     m = sp.Symbol("m_" + planet[0])
+    # create named coords for each planet
     x,y,z = dynamicsymbols("x_" + planet[0] + ", y_" + planet[0] + ", z_" + planet[0])
     L += m*(x.diff(t)**2+y.diff(t)**2+z.diff(t)**2)/2 + G*m*M/sqrt(x**2+y**2+z**2)
     consts.append((m, planet[2]))
@@ -41,7 +42,7 @@ for planet in planets:
     velocities += planet[4]
 
 
-initials = positions + velocities
+initials = positions + velocities # create initial values from data
 
 System = SystemL(L, coords, diagnostic=True) # create the System object
 
@@ -49,11 +50,11 @@ times = np.linspace(0,duration*time_factor,duration*fps)
 
 data = System.ODESolve(initials, times, consts, diagnostic=True)
 
-def convCentre(a):
+def convCentre(a): # conv function for sun
     return 0,0,0
 
 def convFactory(i):
-    def f(a):
+    def f(a): # conv function for planet number i
         x = a[3*i]
         y = a[3*i+1]
         z = a[3*i+2]
