@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/rjbourne/symphysics/",
     author="Robert B., Zeph B.",
-    author_email="symphysics@gmail.com",
+    author_email="symphysicsDev@gmail.com",
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: MIT License",
